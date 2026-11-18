@@ -10,6 +10,7 @@
   --bg:#EEF1EC; --surface:#FFFFFF; --surface-2:#E3E8E1; --ink:#17201B; --muted:#5B685F; --line:#D3DACF;
   --accent:#2A47F5; --accent-ink:#FFFFFF; --accent-soft:#DCE2FF; --sun:#F6B524; --sun-soft:#FCEBC0;
   --good:#1D8456; --warn:#B86A10; --bad:#CF3B32;
+  --c0:#2F6BFF; --c1:#1E9E63; --c2:#E0457B; --c3:#EE8417; --c4:#7B4DE0; --c5:#0FA3A8; --on-c:#FFFFFF;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --r:14px;
@@ -17,12 +18,12 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#101411; --surface:#181D19; --surface-2:#232A24; --ink:#E9EEE9; --muted:#9AA69E; --line:#2E3830;
   --accent:#8F9DFF; --accent-ink:#0E1330; --accent-soft:#252C5A; --sun:#F6C14A; --sun-soft:#3A3018;
-  --good:#4CC38A; --warn:#E8A24A; --bad:#F06A60; color-scheme:dark;
+  --good:#4CC38A; --warn:#E8A24A; --bad:#F06A60; --c0:#7EA2FF; --c1:#4FD08F; --c2:#FF7FA8; --c3:#FFB057; --c4:#B097FF; --c5:#4FD6D9; --on-c:#0D100E; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#101411; --surface:#181D19; --surface-2:#232A24; --ink:#E9EEE9; --muted:#9AA69E; --line:#2E3830;
   --accent:#8F9DFF; --accent-ink:#0E1330; --accent-soft:#252C5A; --sun:#F6C14A; --sun-soft:#3A3018;
-  --good:#4CC38A; --warn:#E8A24A; --bad:#F06A60; color-scheme:dark;
+  --good:#4CC38A; --warn:#E8A24A; --bad:#F06A60; --c0:#7EA2FF; --c1:#4FD08F; --c2:#FF7FA8; --c3:#FFB057; --c4:#B097FF; --c5:#4FD6D9; --on-c:#0D100E; color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{background:var(--bg)}
@@ -88,26 +89,96 @@ button{cursor:pointer}
 .chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:500}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
-/* Hábitos */
+/* Hábitos: cada hábito tem sua cor (--hc) */
 .habits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.habit{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
-.habit.water{background:var(--sun-soft);border-color:transparent}
-.habit .hn{font-weight:600;font-size:14px;overflow-wrap:anywhere}
+.habit{--hc:var(--accent);background:color-mix(in srgb, var(--hc) 10%, var(--surface));border:1px solid color-mix(in srgb, var(--hc) 22%, var(--line));border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.habit .hn{font-weight:600;font-size:14px;overflow-wrap:anywhere;display:flex;align-items:center;gap:8px;min-width:0}
 .habit .hv{font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
 .habit .hv small{font-family:var(--body);font-size:12px;font-weight:500;color:var(--muted)}
 .bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
-.habit.water .bar{background:color-mix(in srgb, var(--sun) 30%, transparent)}
 .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
-.habit.water .bar i{background:var(--sun)}
+.habit .bar{background:color-mix(in srgb, var(--hc) 18%, var(--surface-2))}
+.habit .bar i{background:var(--hc)}
 .habit .ctl{display:flex;gap:6px}
-.habit .ctl button{flex:1;border:0;border-radius:10px;padding:7px 0;font-weight:700;background:var(--surface-2)}
-.habit.water .ctl button{background:color-mix(in srgb, var(--sun) 35%, transparent)}
-.habit .ctl button.plus{background:var(--accent);color:var(--accent-ink)}
-.habit.water .ctl button.plus{background:var(--sun);color:#2A1E00}
-.dots{display:flex;gap:4px}
-.dots i{width:10px;height:10px;border-radius:3px;background:var(--surface-2)}
-.dots i.on{background:var(--good)}
-.dots i.half{background:color-mix(in srgb, var(--good) 40%, transparent)}
+.habit .ctl button{flex:1;border:0;border-radius:10px;padding:7px 0;font-weight:700;background:color-mix(in srgb, var(--hc) 16%, var(--surface-2))}
+.habit .ctl button.plus{background:var(--hc);color:var(--on-c)}
+.hico{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:color-mix(in srgb, var(--hc, var(--accent)) 20%, var(--surface))}
+.fogo{font-size:12px;font-weight:700;color:var(--hc);margin-left:auto;white-space:nowrap}
+.stats{display:flex;flex-wrap:wrap;gap:6px}
+.stat{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:8px;background:var(--surface-2);font-variant-numeric:tabular-nums}
+.stat.hot{background:color-mix(in srgb, var(--hc) 18%, var(--surface));color:var(--ink)}
+
+/* Gamificação */
+.game{background:var(--ink);color:var(--bg);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
+.game .lvl{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.game .lvl b{font-family:var(--display);font-size:28px;line-height:1}
+.game .lvl span{opacity:.75;font-size:14px}
+.game .bar{background:color-mix(in srgb, var(--bg) 22%, transparent)}
+.game .bar i{background:var(--sun)}
+.game .big3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.game .big3 div{background:color-mix(in srgb, var(--bg) 10%, transparent);border-radius:10px;padding:8px 10px}
+.game .big3 b{display:block;font-family:var(--display);font-size:22px;line-height:1.1}
+.game .big3 small{opacity:.75;font-size:11px}
+.medals{display:flex;gap:6px;flex-wrap:wrap}
+.medal{display:flex;flex-direction:column;align-items:center;gap:2px;width:52px;padding:6px 0;border-radius:10px;font-size:10px;font-weight:600;background:color-mix(in srgb, var(--bg) 8%, transparent);opacity:.45}
+.medal i{font-style:normal;font-size:20px;filter:grayscale(1)}
+.medal.on{opacity:1;background:color-mix(in srgb, var(--sun) 28%, transparent)}
+.medal.on i{filter:none}
+
+/* Calendário */
+.cal{display:flex;flex-direction:column;gap:4px}
+.cal-h,.cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-h b{font-size:10px;text-align:center;color:var(--muted);font-weight:600}
+.cal-d{aspect-ratio:1;max-width:100%;border-radius:8px;background:var(--surface-2);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.cal-d.cheio{color:var(--on-c)}
+.cal-d.parcial{color:var(--ink)}
+.cal-d.fut{background:transparent;border:1px dashed var(--line);opacity:.6}
+.cal-d.hoje{outline:2px solid var(--ink);outline-offset:1px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cal-nav b{font-family:var(--display);font-size:16px;text-transform:capitalize}
+.legend{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+/* Pickers do formulário */
+.emoji-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px}
+.emoji-pick button{border:1px solid var(--line);background:var(--bg);border-radius:10px;height:40px;font-size:20px;padding:0}
+.emoji-pick button[aria-pressed="true"]{border:2px solid var(--accent);background:var(--accent-soft)}
+.cor-pick{display:flex;gap:8px;flex-wrap:wrap}
+.cor-pick button{width:34px;height:34px;border-radius:50%;border:3px solid transparent;padding:0}
+.cor-pick button[aria-pressed="true"]{border-color:var(--ink)}
+
+/* Plano do ano */
+.ano-hero{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ano-hero .ano{font-family:var(--display);font-weight:800;font-size:72px;line-height:.9;letter-spacing:-.04em}
+.ano-hero .ano span{color:var(--accent)}
+.palavra{display:flex;flex-direction:column;gap:4px}
+.palavra input{border:0;border-bottom:2px solid var(--line);background:transparent;font-family:var(--display);font-size:24px;font-weight:700;padding:4px 0;width:100%;border-radius:0}
+.palavra input:focus{outline:none;border-bottom-color:var(--accent)}
+.focos{display:flex;flex-direction:column;gap:8px}
+.foco{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r);background:var(--accent);color:var(--accent-ink);min-width:0}
+.foco .n{font-family:var(--display);font-size:26px;font-weight:800;line-height:1;opacity:.9}
+.foco .t{font-weight:600;overflow-wrap:anywhere}
+.foco small{opacity:.8;font-size:12px}
+.foco.vazio{background:transparent;color:var(--muted);border:1.5px dashed var(--line)}
+.mood{columns:3 120px;column-gap:8px}
+.mood figure{margin:0 0 8px;break-inside:avoid;position:relative;border-radius:12px;overflow:hidden;background:var(--surface-2)}
+.mood img{display:block;width:100%;height:auto}
+.mood figure button{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:14px;padding:0}
+.mood-add{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.areas{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.area{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.area-h{display:flex;align-items:center;gap:8px;min-width:0}
+.area-h h3{flex:1;min-width:0;overflow-wrap:anywhere}
+.meta{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px}
+.meta .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.meta.done .t{text-decoration:line-through;color:var(--muted)}
+.star{border:0;background:transparent;font-size:18px;padding:0 2px;line-height:1;opacity:.35;filter:grayscale(1)}
+.star[aria-pressed="true"]{opacity:1;filter:none}
+.add-meta{display:flex;gap:6px;align-items:center}
+.add-meta input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;font-size:14px}
+.add-meta .mic{width:36px;height:36px}
+.add-meta .mic svg{width:18px;height:18px}
+.input-line{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;width:100%;min-width:0}
 
 /* Treino */
 .ex-table{width:100%;border-collapse:collapse;font-size:14px}
@@ -158,8 +229,8 @@ button{cursor:pointer}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
   padding:6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px))}
-nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
-nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:12px;text-decoration:none;color:var(--muted);font-size:11px;font-weight:600}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:12px;text-decoration:none;color:var(--muted);font-size:10.5px;font-weight:600}
 nav.tabs a svg{width:22px;height:22px}
 nav.tabs a[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 
@@ -219,18 +290,32 @@ const ICON = {
   agente: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
   edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
   del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>',
+  ano: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
-const VIEWS = [["hoje", "Hoje"], ["corpo", "Corpo"], ["rotina", "Rotina"], ["agenda", "Agenda"], ["grana", "Grana"], ["agente", "Agente"]];
+const ANO_PLANO = new Date().getMonth() >= 9 ? new Date().getFullYear() + 1 : new Date().getFullYear();
+const VIEWS = [["hoje", "Hoje"], ["corpo", "Corpo"], ["rotina", "Rotina"], ["agenda", "Agenda"], ["grana", "Grana"], ["ano", String(ANO_PLANO)], ["agente", "Agente"]];
 
 /* ===== estado ===== */
 const AREAS = ["treinos", "refeicoes", "tarefas", "habitos", "agenda", "contas", "gastos", "orcamento"];
 const S = {}; AREAS.forEach(a => S[a] = []); S.log = { days: {} };
 let mode = "loading", db = null, sample = null, carregou = false;
-let dict = null, tts = null, falando = false;
-const voz = { estado: "idle", parcial: "", enviar: false };
-let lerResp = false; try { lerResp = localStorage.getItem("central:voz") === "1"; } catch (e) {}
-const ui = { corpo: "treinos", rotina: "tarefas", filtro: "todas", passados: false };
+let dict = null, assets = null;
+const voz = { estado: "idle", alvo: "", base: "", enviar: false };
+const ui = { corpo: "treinos", rotina: "tarefas", filtro: "todas", passados: false, calMes: hoje().slice(0, 7), habAberto: {}, ano: ANO_PLANO };
+S.anos = {};
+
+/* Ícones e cores dos hábitos */
+const EMOJIS = ["💧", "🏋️", "📖", "😴", "🧘", "🥗", "🚶‍♀️", "💊", "☀️", "📝", "🎯", "💻", "🎥", "🎨", "🧹", "🙏", "💰", "📵", "🍎", "🎧", "✍️", "🦷", "🧴", "🌱", "❤️", "⭐", "🏡", "✈️", "💞", "📚", "💪"];
+const CORES = 6;
+const cor = i => `var(--c${((Number(i) || 0) % CORES + CORES) % CORES})`;
+function chutaIcone(nome) {
+  const n = str(nome).toLowerCase();
+  const m = [[/água|agua/, "💧"], [/academia|treino|muscula/, "🏋️"], [/leitura|ler|livro/, "📖"], [/dorm|sono/, "😴"], [/medit|respira/, "🧘"], [/caminh|passos/, "🚶‍♀️"], [/vitamin|remédio|creatina/, "💊"], [/estud|curso/, "💻"], [/conteúdo|post|reels/, "🎥"], [/celular|tela/, "📵"], [/fruta|salada|comer/, "🥗"], [/gratid|ora/, "🙏"], [/skin|pele/, "🧴"]];
+  for (const [re, e] of m) if (re.test(n)) return e;
+  return "⭐";
+}
+const fixHab = (h, i) => ({ ...h, icone: h.icone || chutaIcone(h.nome), cor: h.cor ?? i % CORES, vezesSemana: h.vezesSemana || 7, recorde: h.recorde || 0 });
 
 /* Formato de cada área (usado pelos formulários e pelo agente) */
 const NORM = {
@@ -238,11 +323,13 @@ const NORM = {
     exercicios: arr(o.exercicios).map(e => ({ nome: str(e.nome) || "Exercício", series: num(e.series) || 3, reps: str(e.reps) || "12", carga: str(e.carga) })) }),
   refeicoes: o => ({ nome: str(o.nome) || "Refeição", hora: str(o.hora), itens: Array.isArray(o.itens) ? o.itens.map(str).join("\n") : str(o.itens) }),
   tarefas: o => ({ titulo: str(o.titulo) || "Tarefa", tipo: ["dia", "casa", "trabalho"].includes(o.tipo) ? o.tipo : "dia", data: dataOk(o.data), feito: !!o.feito }),
-  habitos: o => ({ nome: str(o.nome) || "Hábito", meta: num(o.meta) || 1, unidade: str(o.unidade) || "vez", passo: num(o.passo) || 1 }),
+  habitos: o => ({ nome: str(o.nome) || "Hábito", meta: num(o.meta) || 1, unidade: str(o.unidade) || "vez", passo: num(o.passo) || 1,
+    icone: str(o.icone) || chutaIcone(o.nome), cor: Math.abs(Math.round(num(o.cor))) % CORES, vezesSemana: Math.min(7, Math.max(1, Math.round(num(o.vezesSemana)) || 7)), recorde: num(o.recorde) }),
   agenda: o => ({ titulo: str(o.titulo) || "Evento", data: dataOk(o.data) || hoje(), hora: str(o.hora), local: str(o.local) }),
   contas: o => ({ nome: str(o.nome) || "Conta", valor: num(o.valor), vencimento: dataOk(o.vencimento) || hoje(), parcela: str(o.parcela), pago: !!o.pago }),
   gastos: o => ({ desc: str(o.desc) || "Gasto", valor: num(o.valor), categoria: str(o.categoria) || "Outros", data: dataOk(o.data) || hoje() }),
-  orcamento: o => ({ categoria: str(o.categoria) || "Outros", limite: num(o.limite) })
+  orcamento: o => ({ categoria: str(o.categoria) || "Outros", limite: num(o.limite) }),
+  areaAno: o => ({ nome: str(o.nome) || "Área", icone: str(o.icone) || "⭐", metas: arr(o.metas) })
 };
 const norm = (area, o, id) => ({ id: id || uid(), ...NORM[area](o || {}) });
 
@@ -250,20 +337,20 @@ const norm = (area, o, id) => ({ id: id || uid(), ...NORM[area](o || {}) });
 const writing = {}, pending = {};
 async function persist(area) {
   if (mode === "local") {
-    try { localStorage.setItem("central:" + area, JSON.stringify(area === "log" ? S.log : S[area])); } catch (e) {}
+    try { localStorage.setItem("central:" + area, JSON.stringify(area === "log" ? S.log : area.startsWith("ano-") ? S.anos[area.slice(4)] : S[area])); } catch (e) {}
     return;
   }
   if (mode !== "db") return;
   if (writing[area]) { pending[area] = true; return; }
   writing[area] = true;
   try {
-    const body = area === "log" ? { days: podar(S.log.days) } : { items: S[area] };
+    const body = area === "log" ? { days: podar(S.log.days) } : area.startsWith("ano-") ? S.anos[area.slice(4)] : { items: S[area] };
     await db.collection("central").doc(area).set(body);
   } catch (e) { toast(erroDb(e)); }
   writing[area] = false;
   if (pending[area]) { pending[area] = false; persist(area); }
 }
-function podar(days) { const lim = addDias(hoje(), -60); const o = {}; for (const k in days) if (k >= lim) o[k] = days[k]; return o; }
+function podar(days) { const lim = addDias(hoje(), -400); const o = {}; for (const k in days) if (k >= lim) o[k] = days[k]; return o; }
 function erroDb(e) {
   if (e && e.code === "quota_exceeded") return "Seu espaço de dados encheu. Apague itens antigos.";
   if (e && e.code === "invalid_argument") return "Só a dona da central pode salvar aqui.";
@@ -295,10 +382,10 @@ function exemplos() {
       { ...norm("tarefas", { titulo: "Fazer mercado", tipo: "casa", data: addDias(h, 2) }), ...ex }
     ],
     habitos: [
-      { ...norm("habitos", { nome: "Água", meta: 2500, unidade: "ml", passo: 250 }), ...ex },
-      { ...norm("habitos", { nome: "Academia", meta: 1, unidade: "vez", passo: 1 }), ...ex },
-      { ...norm("habitos", { nome: "Leitura", meta: 20, unidade: "min", passo: 10 }), ...ex },
-      { ...norm("habitos", { nome: "Dormir antes da 0h", meta: 1, unidade: "vez", passo: 1 }), ...ex }
+      { ...norm("habitos", { nome: "Água", meta: 2500, unidade: "ml", passo: 250, icone: "💧", cor: 0 }), ...ex },
+      { ...norm("habitos", { nome: "Academia", meta: 1, unidade: "vez", passo: 1, icone: "🏋️", cor: 2, vezesSemana: 4 }), ...ex },
+      { ...norm("habitos", { nome: "Leitura", meta: 20, unidade: "min", passo: 10, icone: "📖", cor: 4 }), ...ex },
+      { ...norm("habitos", { nome: "Dormir antes da 0h", meta: 1, unidade: "vez", passo: 1, icone: "😴", cor: 5 }), ...ex }
     ],
     agenda: [
       { ...norm("agenda", { titulo: "Reunião de alinhamento", data: addDias(h, 1), hora: "10:00", local: "Meet" }), ...ex },
@@ -329,6 +416,8 @@ function startLocal() {
     try { const v = JSON.parse(localStorage.getItem("central:" + a) || "null"); if (v) { algum = true; if (a === "log") S.log = v; else S[a] = arr(v); } } catch (e) {}
   }
   if (!algum) { const e = exemplos(); for (const a of AREAS) { S[a] = e[a]; persist(a); } }
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith("central:ano-")) S.anos[k.slice(12)] = JSON.parse(localStorage.getItem(k)); } } catch (e) {}
+  S.habitos = S.habitos.map(fixHab);
   carregou = true; render();
 }
 async function init() {
@@ -347,54 +436,61 @@ async function init() {
       const a = d.id, v = d.data() || {};
       if (writing[a] || pending[a]) continue;
       if (a === "log") S.log = { days: JSON.parse(JSON.stringify(v.days || {})) };
+      else if (a.startsWith("ano-")) S.anos[a.slice(4)] = JSON.parse(JSON.stringify(v));
       else if (AREAS.includes(a)) S[a] = JSON.parse(JSON.stringify(arr(v.items)));
     }
+    S.habitos = S.habitos.map(fixHab);
     carregou = true; render();
   }, e => { clearTimeout(timer); aviso = "Não consegui abrir seus dados. Recarregue a página."; carregou = true; render(); });
   c.use("sample").then(s => { sample = s; if (rota() === "agente") render(); });
-  c.use("dictation").then(d => { if (!d) return; dict = d; ligarDitado(d); if (rota() === "agente") render(); });
-  c.use("tts").then(t => { if (!t) return; tts = t; t.onState(({ state }) => { falando = state === "speaking"; atualizarVoz(); }); if (rota() === "agente") render(); });
+  c.use("dictation").then(d => { if (!d) return; dict = d; ligarDitado(d); render(); });
+  c.use("assets").then(a => { assets = a; if (rota() === "ano") render(); });
 }
 
-/* ===== voz ===== */
+/* ===== voz: fala vira texto no campo escolhido ===== */
 const juntar = (a, b) => [str(a), str(b)].filter(Boolean).join(" ");
+const ouvindo = () => voz.estado === "listening" || voz.estado === "starting";
 function ligarDitado(d) {
-  d.onPartial(({ text }) => { voz.parcial = text; const ta = $("#ask"); if (ta) ta.value = juntar(rascunho, text); });
-  d.onFinal(({ text }) => { rascunho = juntar(rascunho, text); voz.parcial = ""; const ta = $("#ask"); if (ta) ta.value = rascunho; });
+  d.onPartial(({ text }) => { const el = document.getElementById(voz.alvo); if (el) el.value = juntar(voz.base, text); });
+  d.onFinal(({ text }) => {
+    voz.base = juntar(voz.base, text);
+    if (voz.alvo === "ask") rascunho = voz.base;
+    const el = document.getElementById(voz.alvo); if (el) el.value = voz.base;
+  });
   d.onState(({ state, reason }) => {
     voz.estado = state;
     if (state === "idle") {
-      voz.parcial = "";
       if (reason === "not_granted" || reason === "unavailable") { dict = null; toast(reason === "not_granted" ? "Microfone bloqueado. Libere nas permissões da página." : "Voz não disponível aqui. Use o microfone do teclado."); render(); }
       else if (reason === "upstream_error" || reason === "rate_limited") toast("Não consegui ouvir agora. Tenta de novo.");
-      const mandar = voz.enviar && reason === "stopped" && str(rascunho);
+      const alvo = voz.alvo, texto = str(voz.base), mandar = voz.enviar && reason === "stopped" && texto;
       voz.enviar = false;
-      if (mandar) enviar(rascunho);
+      if (mandar && alvo === "ask") enviar(texto);
+      else if (mandar && alvo.startsWith("nm-")) { const f = document.getElementById(alvo)?.form; f && f.requestSubmit(); }
     }
     atualizarVoz();
   });
 }
 function atualizarVoz() {
-  const m = $("#mic"); if (!m) return;
-  const on = voz.estado === "listening" || voz.estado === "starting";
-  m.dataset.on = on; m.setAttribute("aria-label", on ? "Parar e enviar" : "Falar com o agente");
-  const h = $("#voz-status"); if (h) h.textContent = on ? "Ouvindo… toque de novo pra enviar" : voz.estado === "finishing" ? "Finalizando…" : falando ? "Falando…" : "";
+  document.querySelectorAll(".mic").forEach(m => {
+    const on = ouvindo() && voz.alvo === m.dataset.alvo;
+    m.dataset.on = on; m.setAttribute("aria-label", on ? "Parar de ouvir" : "Falar em vez de digitar");
+  });
+  const h = $("#voz-status");
+  if (h && dict) h.textContent = ouvindo() && voz.alvo === "ask" ? "Ouvindo… toque de novo pra enviar" : voz.estado === "finishing" ? "Finalizando…" : "Toque no microfone e fale";
 }
-function tocarMic() {
+function tocarMic(alvo) {
   if (!dict) return;
-  if (voz.estado === "listening" || voz.estado === "starting") { voz.enviar = true; dict.stop().catch(() => {}); return; }
-  if (chat.busy) return;
+  if (ouvindo()) { const mesmo = voz.alvo === alvo; voz.enviar = mesmo; dict.stop().catch(() => {}); if (mesmo) return; }
+  if (alvo === "ask" && chat.busy) return;
+  voz.alvo = alvo; voz.base = (document.getElementById(alvo) || {}).value || "";
   dict.start().catch(e => {
     if (e && e.code === "not_granted") { dict = null; render(); toast("Sem acesso ao microfone. Libere nas permissões da página."); }
     else if (e && e.code === "unavailable") { dict = null; render(); toast("Voz não disponível aqui. Use o microfone do teclado."); }
     else if (e && e.code !== "stopped" && e.code !== "dismissed") toast("Não consegui ouvir agora.");
   });
-  if (tts && falando) tts.stop();
 }
-function falar(texto) {
-  if (!tts || !lerResp || !str(texto)) return;
-  tts.speak(texto.replace(/^\s*-\s*/gm, "").slice(0, 2000), { language: "pt-BR" }).catch(() => {});
-}
+const MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+const micBtn = alvo => dict ? `<button type="button" class="mic" data-act="mic" data-alvo="${alvo}" data-on="${ouvindo() && voz.alvo === alvo}" aria-label="Falar em vez de digitar">${MIC_SVG}</button>` : "";
 let aviso = "";
 
 /* ===== render ===== */
@@ -404,10 +500,18 @@ function render() {
   $("#tabs").innerHTML = VIEWS.map(([k, n]) => `<a href="#${k}" ${k === r ? 'aria-current="page"' : ""}>${ICON[k]}<span>${n}</span></a>`).join("");
   if (!carregou) return;
   const app = $("#app");
-  const foco = document.activeElement && document.activeElement.id;
-  app.innerHTML = (aviso ? `<p class="note">${esc(aviso)}</p>` : "") + ({ hoje: vHoje, corpo: vCorpo, rotina: vRotina, agenda: vAgenda, grana: vGrana, agente: vAgente }[r])()
+  // guarda o que está sendo digitado pra não perder no redesenho
+  const ae = document.activeElement, focoId = ae && ae.id && app.contains(ae) ? ae.id : "";
+  let sel = null; try { sel = focoId && ae.selectionStart != null ? [ae.selectionStart, ae.selectionEnd] : null; } catch (e) {}
+  const vals = {};
+  app.querySelectorAll("input[data-keep]").forEach(el => { vals[el.id] = el.value; });
+  if (focoId && ae.tagName === "INPUT" && ae.type !== "file") vals[focoId] = ae.value;
+  app.innerHTML = (aviso ? `<p class="note">${esc(aviso)}</p>` : "") + ({ hoje: vHoje, corpo: vCorpo, rotina: vRotina, agenda: vAgenda, grana: vGrana, ano: vAno, agente: vAgente }[r])()
     + (mode === "local" ? `<p class="note">Salvo só neste aparelho.</p>` : "");
-  if (r === "agente") montarChat(foco);
+  for (const id in vals) { const el = document.getElementById(id); if (el) el.value = vals[id]; }
+  if (r === "agente") montarChat();
+  if (focoId) { const el = document.getElementById(focoId); if (el) { el.focus({ preventScroll: true }); try { sel && el.setSelectionRange(sel[0], sel[1]); } catch (e) {} } }
+  atualizarVoz();
 }
 const exTag = it => it.ex ? ` <span class="pill ex">exemplo</span>` : "";
 const acts = (area, id) => `<button class="icon-btn" data-act="edit" data-area="${area}" data-id="${id}" aria-label="Editar">${ICON.edit}</button><button class="icon-btn" data-act="del" data-area="${area}" data-id="${id}" aria-label="Apagar">${ICON.del}</button>`;
@@ -431,6 +535,7 @@ function vHoje() {
     <div><div class="big">${DIAS[wd]} <span>${d.getDate()}</span></div><div class="sub">${MESES[d.getMonth()]} de ${d.getFullYear()}</div></div>
     <div class="hi"><b>${oi}, Yasmin</b>${pend ? `${pend} tarefa${pend > 1 ? "s" : ""} pra hoje` : "Nada pendente pra hoje"}</div>
   </header>
+  ${focosHoje()}
   <section class="sec"><div class="sec-head"><h2>Hábitos</h2><a class="small muted" href="#rotina" data-act="seg" data-k="rotina" data-v="habitos">ver todos</a></div>
     ${S.habitos.length ? `<div class="habits">${S.habitos.map(habCard).join("")}</div>` : `<div class="list"><div class="empty">Crie seu primeiro hábito, tipo beber água. <button class="btn sm" data-act="add" data-area="habitos">Criar hábito</button></div></div>`}
   </section>
@@ -452,13 +557,92 @@ function vHoje() {
   </section>`;
 }
 function habCard(hb) {
-  const v = habVal(hb.id), p = Math.min(100, Math.round(v / hb.meta * 100)), agua = /água|agua/i.test(hb.nome);
-  return `<div class="habit ${agua ? "water" : ""}">
-    <div class="hn">${esc(hb.nome)}</div>
+  const v = habVal(hb.id), p = Math.min(100, Math.round(v / hb.meta * 100)), sd = seqDias(hb);
+  return `<div class="habit" style="--hc:${cor(hb.cor)}">
+    <div class="hn"><span class="hico">${esc(hb.icone)}</span><span class="grow">${esc(hb.nome)}</span>${sd ? `<span class="fogo">🔥${sd}</span>` : ""}</div>
     <div class="hv num">${fmtNum(v)}<small> / ${fmtNum(hb.meta)} ${esc(hb.unidade)}</small></div>
     <div class="bar"><i style="width:${p}%"></i></div>
     <div class="ctl"><button data-act="hab" data-id="${hb.id}" data-d="-1" aria-label="Diminuir ${esc(hb.nome)}">−</button><button class="plus" data-act="hab" data-id="${hb.id}" data-d="1" aria-label="Somar ${esc(hb.nome)}">+${fmtNum(hb.passo)}</button></div>
   </div>`;
+}
+
+/* ===== sequências e gamificação ===== */
+const bateu = (hb, d) => habVal(hb.id, d) >= hb.meta;
+function seqDias(hb) {
+  let d = hoje(), n = 0;
+  if (!bateu(hb, d)) d = addDias(d, -1);
+  while (bateu(hb, d) && n < 400) { n++; d = addDias(d, -1); }
+  return n;
+}
+const segunda = s => addDias(s, -((new Date(s + "T12:00").getDay() + 6) % 7));
+function diasNaSemana(hb, seg) { let c = 0; for (let i = 0; i < 7; i++) { const d = addDias(seg, i); if (d > hoje()) break; if (bateu(hb, d)) c++; } return c; }
+function seqSemanas(hb) {
+  let seg = segunda(hoje()), n = 0;
+  if (diasNaSemana(hb, seg) < hb.vezesSemana) seg = addDias(seg, -7);
+  while (diasNaSemana(hb, seg) >= hb.vezesSemana && n < 60) { n++; seg = addDias(seg, -7); }
+  return n;
+}
+function pctMes(hb, ym = mesAtual()) {
+  const [y, m] = ym.split("-").map(Number), total = new Date(y, m, 0).getDate();
+  let feitos = 0, passados = 0;
+  for (let i = 1; i <= total; i++) { const d = ym + "-" + pad(i); if (d > hoje()) break; passados++; if (bateu(hb, d)) feitos++; }
+  const esperado = passados * hb.vezesSemana / 7;
+  return esperado ? Math.min(100, Math.round(feitos / esperado * 100)) : 0;
+}
+const recorde = hb => Math.max(hb.recorde || 0, seqDias(hb));
+const MEDALHAS = [[3, "🌱", "3 dias"], [7, "🔥", "1 semana"], [14, "⚡", "2 semanas"], [21, "💎", "21 dias"], [30, "🏅", "1 mês"], [66, "🧠", "Hábito formado"], [100, "👑", "100 dias"]];
+const NIVEIS = ["Começando", "Pegando o ritmo", "Constante", "Focada", "Disciplinada", "Imparável", "Lenda"];
+function xpTotal() {
+  let xp = 0;
+  for (const d in S.log.days) {
+    const x = S.log.days[d];
+    for (const hb of S.habitos) if (x.h && (x.h[hb.id] || 0) >= hb.meta) xp += 10;
+    xp += (x.t || []).length * 25 + (x.m || []).length * 3;
+  }
+  return xp;
+}
+function fracDia(d) { if (!S.habitos.length) return 0; return S.habitos.filter(hb => bateu(hb, d)).length / S.habitos.length; }
+function diasPerfeitos() { let d = hoje(), n = 0; if (fracDia(d) < 1) d = addDias(d, -1); while (S.habitos.length && fracDia(d) >= 1 && n < 400) { n++; d = addDias(d, -1); } return n; }
+
+function calendario(ym, valor, c) {
+  const [y, m] = ym.split("-").map(Number), off = (new Date(y, m - 1, 1).getDay() + 6) % 7, total = new Date(y, m, 0).getDate();
+  let cells = "<span></span>".repeat(off);
+  for (let i = 1; i <= total; i++) {
+    const d = ym + "-" + pad(i), fut = d > hoje(), v = fut ? 0 : Math.min(1, valor(d));
+    const bg = fut || !v ? "" : v >= 1 ? `background:${c}` : `background:color-mix(in srgb, ${c} ${Math.round(20 + v * 45)}%, var(--surface-2))`;
+    cells += `<span class="cal-d${d === hoje() ? " hoje" : ""}${fut ? " fut" : ""}${v >= 1 ? " cheio" : v > 0 ? " parcial" : ""}" style="${bg}" title="${fmtData(d)}">${i}</span>`;
+  }
+  return `<div class="cal"><div class="cal-h">${["S", "T", "Q", "Q", "S", "S", "D"].map(x => `<b>${x}</b>`).join("")}</div><div class="cal-g">${cells}</div></div>`;
+}
+function navMes() {
+  const [y, m] = ui.calMes.split("-").map(Number);
+  return `<div class="cal-nav"><button class="icon-btn" data-act="mes" data-d="-1" aria-label="Mês anterior">‹</button><b>${MESES[m - 1]} ${y}</b><button class="icon-btn" data-act="mes" data-d="1" aria-label="Próximo mês" ${ui.calMes >= mesAtual() ? "disabled" : ""}>›</button></div>`;
+}
+function vHabitos() {
+  const xp = xpTotal(), nivel = Math.floor(xp / 300) + 1, prog = Math.round((xp % 300) / 3);
+  const melhor = Math.max(0, ...S.habitos.map(recorde)), perfeitos = diasPerfeitos();
+  const semanas = S.habitos.length ? Math.max(...S.habitos.map(seqSemanas)) : 0;
+  const mediaMes = S.habitos.length ? Math.round(S.habitos.reduce((s, hb) => s + pctMes(hb), 0) / S.habitos.length) : 0;
+  return `<section class="game" aria-label="Seu progresso">
+      <div class="lvl"><b>Nível ${nivel}</b><span>${NIVEIS[Math.min(nivel - 1, NIVEIS.length - 1)]} · ${xp} XP</span></div>
+      <div class="bar" aria-label="Progresso pro próximo nível"><i style="width:${prog}%"></i></div>
+      <div class="big3"><div><b class="num">🔥 ${perfeitos}</b><small>dias perfeitos seguidos</small></div><div><b class="num">${semanas}</b><small>semanas seguidas na meta</small></div><div><b class="num">${mediaMes}%</b><small>do mês cumprido</small></div></div>
+      <div class="medals">${MEDALHAS.map(([n, e, l]) => `<div class="medal ${melhor >= n ? "on" : ""}" title="${l}"><i>${e}</i>${l}</div>`).join("")}</div>
+    </section>
+    <section class="sec card">${navMes()}${calendario(ui.calMes, fracDia, "var(--accent)")}
+      <div class="legend"><span>menos</span><i style="background:var(--surface-2)"></i><i style="background:color-mix(in srgb, var(--accent) 40%, var(--surface-2))"></i><i style="background:color-mix(in srgb, var(--accent) 65%, var(--surface-2))"></i><i style="background:var(--accent)"></i><span>todos os hábitos</span></div>
+    </section>
+    <section class="sec">${head("Meus hábitos", "habitos", "Hábito")}
+    ${S.habitos.length ? S.habitos.map(hb => {
+      const v = habVal(hb.id), sd = seqDias(hb), ss = seqSemanas(hb), aberto = ui.habAberto[hb.id];
+      return `<div class="habit" style="--hc:${cor(hb.cor)}">
+        <div class="hn"><span class="hico">${esc(hb.icone)}</span><span class="grow">${esc(hb.nome)}${exTag(hb)}<br><span class="small muted num" style="font-weight:500">${fmtNum(v)}/${fmtNum(hb.meta)} ${esc(hb.unidade)} hoje · ${hb.vezesSemana === 7 ? "todo dia" : hb.vezesSemana + "x por semana"}</span></span>${acts("habitos", hb.id)}</div>
+        <div class="stats"><span class="stat hot">🔥 ${sd} dia${sd === 1 ? "" : "s"}</span><span class="stat">📅 ${ss} semana${ss === 1 ? "" : "s"}</span><span class="stat">${pctMes(hb)}% do mês</span><span class="stat">🏆 recorde ${recorde(hb)}</span></div>
+        <div class="ctl"><button data-act="hab" data-id="${hb.id}" data-d="-1" aria-label="Diminuir">−</button><button class="plus" data-act="hab" data-id="${hb.id}" data-d="1" aria-label="Somar">+${fmtNum(hb.passo)}</button><button data-act="hab-cal" data-id="${hb.id}" aria-expanded="${!!aberto}">${aberto ? "Fechar" : "Calendário"}</button></div>
+        ${aberto ? `${navMes()}${calendario(ui.calMes, d => habVal(hb.id, d) / hb.meta, cor(hb.cor))}` : ""}
+      </div>`;
+    }).join("") : `<div class="list"><div class="empty">Nenhum hábito ainda. Crie o primeiro e escolha um ícone e uma cor.</div></div>`}
+    </section>`;
 }
 const fmtNum = n => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
 const ordenaRef = l => [...l].sort((a, b) => (a.hora || "99").localeCompare(b.hora || "99"));
@@ -521,15 +705,7 @@ function vRotina() {
       ${feitas.length ? `<div class="sec-head"><span class="label">Concluídas · ${feitas.length}</span><button class="btn sm ghost" data-act="limpar-feitas">Apagar concluídas</button></div><div class="list">${feitas.map(tarefaRow).join("")}</div>` : ""}
     </section>`;
   }
-  const ult = Array.from({ length: 7 }, (_, i) => addDias(hoje(), i - 6));
-  return `${seg}<section class="sec">${head("Hábitos", "habitos", "Hábito")}
-    <div class="list">${S.habitos.length ? S.habitos.map(hb => {
-      const v = habVal(hb.id);
-      return `<div class="item"><div class="grow stack" style="gap:6px">
-        <div class="t">${esc(hb.nome)}${exTag(hb)} <span class="muted small num">${fmtNum(v)}/${fmtNum(hb.meta)} ${esc(hb.unidade)}</span></div>
-        <div class="row" style="gap:10px"><div class="dots" aria-label="Últimos 7 dias">${ult.map(d => { const x = habVal(hb.id, d) / hb.meta; return `<i class="${x >= 1 ? "on" : x > 0 ? "half" : ""}" title="${fmtData(d)}"></i>`; }).join("")}</div><span class="small muted">últimos 7 dias</span></div></div>
-        <button class="icon-btn" data-act="hab" data-id="${hb.id}" data-d="1" aria-label="Somar">${ICON.plus}</button>${acts("habitos", hb.id)}</div>`;
-    }).join("") : `<div class="empty">Nenhum hábito ainda.</div>`}</div></section>`;
+  return seg + vHabitos();
 }
 
 /* --- Agenda --- */
@@ -581,23 +757,78 @@ function vGrana() {
   </section>`;
 }
 
+/* --- Plano do ano --- */
+const AREAS_PADRAO = [["Saúde & corpo", "💪"], ["Carreira", "💻"], ["Conteúdo", "🎥"], ["Finanças", "💰"], ["Estudos", "📚"], ["Relacionamentos", "💞"], ["Casa", "🏡"], ["Lazer & viagens", "✈️"], ["Mente", "🧘"]];
+function planoDe(ano) {
+  if (!S.anos[ano]) S.anos[ano] = { palavra: "", pinterest: "", mood: [], areas: AREAS_PADRAO.map(([nome, icone]) => ({ id: uid(), nome, icone, metas: [] })) };
+  const p = S.anos[ano]; p.areas = arr(p.areas); p.mood = arr(p.mood); return p;
+}
+const salvarAno = () => persist("ano-" + ui.ano);
+function todasMetas(p) { return p.areas.flatMap(a => arr(a.metas).map(m => ({ ...m, area: a }))); }
+function focosHoje() {
+  const p = S.anos[ANO_PLANO]; if (!p) return "";
+  const f = todasMetas(planoDe(ANO_PLANO)).filter(m => m.foco);
+  if (!f.length) return "";
+  return `<section class="sec"><div class="sec-head"><h2>Focos de ${ANO_PLANO}</h2><a class="small muted" href="#ano">ver plano</a></div>
+    <div class="chips">${f.map(m => `<span class="chip">${esc(m.area.icone)} ${esc(m.texto)}</span>`).join("")}</div></section>`;
+}
+function vAno() {
+  const p = planoDe(ui.ano), metas = todasMetas(p), feitas = metas.filter(m => m.feito).length, focos = metas.filter(m => m.foco);
+  const y = String(ui.ano);
+  return `<header class="ano-hero">
+      <button class="icon-btn" data-act="ano" data-d="-1" aria-label="Ano anterior">‹</button>
+      <div class="ano">${y.slice(0, 2)}<span>${y.slice(2)}</span></div>
+      <button class="icon-btn" data-act="ano" data-d="1" aria-label="Próximo ano">›</button>
+    </header>
+    <div class="palavra"><span class="label">Palavra do ano</span><input id="palavra" data-chg="palavra" value="${esc(p.palavra)}" placeholder="Ex: constância" autocomplete="off"></div>
+    <section class="sec"><div class="sec-head"><h2>Meus 3 focos</h2><span class="small muted num">${feitas}/${metas.length} conquistas</span></div>
+      ${metas.length ? `<div class="bar"><i style="width:${Math.round(feitas / metas.length * 100)}%"></i></div>` : ""}
+      <div class="focos">${[0, 1, 2].map(i => { const m = focos[i];
+        return m ? `<div class="foco"><span class="n">${i + 1}</span><div class="grow"><div class="t">${esc(m.texto)}</div><small>${esc(m.area.icone)} ${esc(m.area.nome)}${m.feito ? " · conquistado ✓" : ""}</small></div></div>`
+          : `<div class="foco vazio"><span class="n">${i + 1}</span><div class="grow small">Toque na ⭐ de uma conquista pra virar foco</div></div>`; }).join("")}</div>
+    </section>
+    <section class="sec"><div class="sec-head"><h2>Moodboard</h2></div>
+      ${p.mood.length ? `<div class="mood">${p.mood.map(im => `<figure><img src="${esc(im.url)}" alt="Imagem do moodboard" loading="lazy">${assets ? `<button data-act="mood-del" data-id="${esc(im.id)}" aria-label="Remover imagem">✕</button>` : ""}</figure>`).join("")}</div>` : ""}
+      <div class="mood-add">${assets ? `<label class="btn sm" for="mood-file">+ Adicionar fotos</label><input id="mood-file" type="file" accept="image/*" multiple hidden>` : `<span class="small muted">As fotos funcionam com a central aberta no Claude.</span>`}</div>
+      <div class="row"><input class="input-line" id="pin" data-chg="pinterest" value="${esc(p.pinterest)}" placeholder="Cole o link da sua pasta do Pinterest" inputmode="url" autocomplete="off">${/^https?:\/\//.test(p.pinterest) ? `<a class="btn sm ghost" href="${esc(p.pinterest)}" target="_blank" rel="noopener">Abrir</a>` : ""}</div>
+    </section>
+    <section class="sec">${head("Áreas da vida", "areaAno", "Área")}
+      <div class="areas">${p.areas.map(a => { const ms = arr(a.metas), ok = ms.filter(m => m.feito).length;
+        return `<div class="area">
+          <div class="area-h"><span class="hico">${esc(a.icone)}</span><h3>${esc(a.nome)}</h3><span class="small muted num">${ok}/${ms.length}</span>${acts("areaAno", a.id)}</div>
+          ${ms.map(m => `<div class="meta ${m.feito ? "done" : ""}"><button class="chk" aria-pressed="${!!m.feito}" data-act="meta-feito" data-a="${a.id}" data-id="${m.id}" aria-label="Marcar conquistada"></button><span class="t">${esc(m.texto)}</span><button class="star" aria-pressed="${!!m.foco}" data-act="meta-foco" data-a="${a.id}" data-id="${m.id}" aria-label="Marcar como foco">⭐</button><button class="icon-btn" data-act="meta-del" data-a="${a.id}" data-id="${m.id}" aria-label="Apagar">${ICON.del}</button></div>`).join("")}
+          <form class="add-meta" data-form="meta" data-a="${a.id}"><input id="nm-${a.id}" data-keep placeholder="Quero conquistar…" autocomplete="off">${micBtn("nm-" + a.id)}<button class="btn sm" type="submit" aria-label="Adicionar">+</button></form>
+        </div>`; }).join("")}</div>
+    </section>
+    ${sample ? `<button class="btn" style="align-self:center" data-act="planejar">✨ Planejar ${y} com o agente</button>` : ""}`;
+}
+async function subirFotos(files) {
+  if (!assets || !files.length) return;
+  const p = planoDe(ui.ano); toast(`Enviando ${files.length} foto${files.length > 1 ? "s" : ""}…`);
+  let ok = 0;
+  for (const f of files) {
+    try { const r = await assets.upload(f); p.mood.push({ id: r.id, url: r.url }); ok++; render(); }
+    catch (e) { toast("Uma foto não subiu. Tente uma imagem menor que 20 MB."); }
+  }
+  if (ok) { salvarAno(); toast(`${ok} foto${ok > 1 ? "s" : ""} no moodboard`); }
+}
+
 /* --- Agente --- */
 const chat = { turns: [], vis: [], busy: false, ctl: null };
-const SUGESTOES = ["Monta um treino ABC pra eu fazer 3x na semana", "Organiza minhas tarefas de hoje por prioridade", "Monta um cardápio simples e barato pra amanhã", "Como tão minhas finanças esse mês?", "Paguei a internet, marca aí"];
+const SUGESTOES = ["Me ajuda a planejar meu " + ANO_PLANO, "Monta um treino ABC pra eu fazer 3x na semana", "Organiza minhas tarefas de hoje por prioridade", "Monta um cardápio simples e barato pra amanhã", "Como tão minhas finanças esse mês?", "Paguei a internet, marca aí"];
 function vAgente() {
   if (!sample) return `<div class="agent-intro"><h2>Sua assistente</h2><p>O agente funciona quando a central está aberta no Claude. Aqui ele não está disponível, mas o resto da central funciona normal.</p></div>`;
-  return `<div class="agent-intro"><h2>Oi, Yasmin. Bora organizar?</h2><p>Eu vejo tudo da sua central e posso criar treinos, refeições, tarefas, eventos, contas, gastos e hábitos pra você.</p></div>
+  return `<div class="agent-intro"><h2>Oi, Yasmin. Bora organizar?</h2><p>Eu vejo tudo da sua central e posso criar treinos, refeições, tarefas, eventos, contas, gastos, hábitos e metas do ano pra você.</p></div>
   <div class="chat" id="chat"></div>
   ${chat.vis.length ? "" : `<div class="chips">${SUGESTOES.map(s => `<button class="chip" data-act="sugestao">${esc(s)}</button>`).join("")}</div>`}
-  <div class="voz-row">${tts ? `<button class="chip" id="voz-toggle" data-act="voz-toggle" aria-pressed="${lerResp}">🔊 Ler respostas em voz alta</button>` : ""}<span class="voz-hint" id="voz-status">${dict || tts ? "" : "Pra falar, use o microfone do teclado do celular."}</span></div>
-  <form class="composer" id="composer">${dict ? `<button type="button" class="mic" id="mic" data-act="mic" data-on="false" aria-label="Falar com o agente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>` : ""}<textarea id="ask" rows="1" placeholder="${dict ? "Fala ou digita…" : "Pede qualquer coisa…"}" aria-label="Mensagem para o agente"></textarea><button class="btn" id="send" type="submit">${chat.busy ? "Parar" : "Enviar"}</button></form>`;
+  <div class="voz-row"><span class="voz-hint" id="voz-status">${dict ? "Toque no microfone e fale" : "Pra falar, toque no microfone do teclado do celular."}</span></div>
+  <form class="composer" id="composer">${micBtn("ask")}<textarea id="ask" rows="1" placeholder="${dict ? "Fala ou digita…" : "Pede qualquer coisa…"}" aria-label="Mensagem para o agente"></textarea><button class="btn" id="send" type="submit">${chat.busy ? "Parar" : "Enviar"}</button></form>`;
 }
-function montarChat(foco) {
+function montarChat() {
   const box = $("#chat"); if (!box) return;
   box.innerHTML = chat.vis.map(m => `<div class="msg ${m.who}">${esc(m.text)}</div>`).join("");
   const ta = $("#ask");
-  atualizarVoz();
-  if (ta) { ta.value = juntar(rascunho, voz.parcial); if (foco === "ask") ta.focus(); ta.addEventListener("input", () => { rascunho = ta.value; }); ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#composer").requestSubmit(); } }); }
+  if (ta) { ta.value = rascunho; ta.addEventListener("input", () => { rascunho = ta.value; }); ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#composer").requestSubmit(); } }); }
   $("#composer").addEventListener("submit", e => { e.preventDefault(); if (chat.busy) { chat.ctl && chat.ctl.abort(); return; } enviar(rascunho); });
 }
 let rascunho = "";
@@ -608,6 +839,9 @@ function contexto() {
   for (const a of AREAS) dados[a] = S[a].map(({ ex, ...r }) => r);
   dados.hoje_habitos = Object.fromEntries(S.habitos.map(h => [h.id, habVal(h.id)]));
   dados.hoje_treinos_feitos = (S.log.days[hoje()] || {}).t || [];
+  dados.habitos_sequencias = S.habitos.map(h => ({ id: h.id, nome: h.nome, dias_seguidos: seqDias(h), semanas_seguidas: seqSemanas(h), pct_mes: pctMes(h) }));
+  const pl = planoDe(ui.ano);
+  dados.plano_do_ano = { ano: ui.ano, palavra: pl.palavra, areas: pl.areas.map(a => ({ nome: a.nome, metas: arr(a.metas).map(m => ({ texto: m.texto, feito: !!m.feito, foco: !!m.foco })) })) };
   let json = JSON.stringify(dados);
   if (json.length > 60000) json = json.slice(0, 60000);
   return `Você é a assistente pessoal da Yasmin dentro do app "Central da Yasmin". Yasmin é dev front-end júnior e criadora de conteúdo e quer organizar treinos, alimentação, tarefas (do dia, de casa, de trabalho), hábitos, agenda e finanças.
@@ -625,11 +859,13 @@ Campos por área (para a ferramenta adicionar):
 - treinos: {nome, dias:[números 0-6], exercicios:[{nome, series:número, reps:"12" ou "8-10", carga:"20kg" ou ""}]}
 - refeicoes: {nome, hora:"HH:MM", itens:"um item por linha"}
 - tarefas: {titulo, tipo:"dia"|"casa"|"trabalho", data:"AAAA-MM-DD" ou ""}
-- habitos: {nome, meta:número, unidade:"ml"|"vez"|"min"|..., passo:número somado por toque}
+- habitos: {nome, meta:número, unidade:"ml"|"vez"|"min"|..., passo:número somado por toque, icone:um emoji, cor:0-5, vezesSemana:1-7}
 - agenda: {titulo, data:"AAAA-MM-DD", hora:"HH:MM" ou "", local}
 - contas: {nome, valor:número, vencimento:"AAAA-MM-DD", parcela:"3/10" ou ""}
 - gastos: {desc, valor:número, categoria, data:"AAAA-MM-DD"}
 - orcamento: {categoria, limite:número mensal}
+
+Plano do ano: use a ferramenta adicionar_metas pra colocar conquistas nas áreas da vida. Ela pode ter no máximo 3 focos no total. Ajude a escolher focos que se reforçam (ex: saúde + conteúdo + carreira) e a transformar metas vagas em coisas mensuráveis.
 
 Dados atuais da central (JSON):
 ${json}`;
@@ -660,6 +896,17 @@ const TOOLS = [
       return { ok: true };
     } }
 ];
+TOOLS.push({ name: "adicionar_metas", description: "Adiciona conquistas ao plano do ano numa área da vida (cria a área se não existir). foco=true marca como um dos 3 focos (máximo 3 no total).",
+  inputSchema: { type: "object", properties: { area: { type: "string", description: "Nome da área, ex: Carreira" }, metas: { type: "array", items: { type: "object", properties: { texto: { type: "string" }, foco: { type: "boolean" } }, required: ["texto"] } } }, required: ["area", "metas"] },
+  execute(inp) {
+    const p = planoDe(ui.ano), nome = str(inp.area) || "Geral";
+    let ar = p.areas.find(a => a.nome.toLowerCase() === nome.toLowerCase());
+    if (!ar) { ar = { id: uid(), nome, icone: "⭐", metas: [] }; p.areas.push(ar); }
+    let focos = todasMetas(p).filter(m => m.foco).length, n = 0;
+    for (const m of arr(inp.metas).slice(0, 20)) { const t = str(m && m.texto); if (!t) continue; const f = !!m.foco && focos < 3; if (f) focos++; ar.metas = arr(ar.metas); ar.metas.push({ id: uid(), texto: t, feito: false, foco: f }); n++; }
+    salvarAno(); render(); logTool(`Coloquei ${n} meta${n === 1 ? "" : "s"} em ${ar.nome}`);
+    return { salvas: n, focos_no_total: focos };
+  } });
 const NOME_AREA = { treinos: "Treinos", refeicoes: "Alimentação", tarefas: "Tarefas", habitos: "Hábitos", agenda: "Agenda", contas: "Contas", gastos: "Gastos", orcamento: "Planejamento" };
 function logTool(t) { chat.vis.push({ who: "tool", text: "✓ " + t }); }
 
@@ -675,7 +922,6 @@ async function enviar(texto) {
       onText: ({ text }) => { bolha.text = text; const els = document.querySelectorAll("#chat .msg.bot"); const el = els[els.length - 1]; if (el) el.textContent = text; }
     });
     bolha.text = text; chat.turns.push({ role: "assistant", content: text });
-    falar(text);
   } catch (e) {
     const msg = { cancelled: "", not_granted: "Sem permissão pra usar o Claude aqui. Libere nas permissões da página.", rate_limited: "Muitos pedidos seguidos. Espera um pouquinho e tenta de novo.", tools_unavailable: "Este app do Claude não deixa o agente salvar itens ainda. Tente pelo navegador.", refused: "Não consigo ajudar com isso. Tenta pedir de outro jeito.", session_expired: "Sua sessão expirou. Entre de novo no Claude." }[e && e.code];
     bolha.text = (e && e.code !== "refused" && e.text ? e.text + "\n\n" : "") + (msg ?? "Deu ruim na conexão. Tenta de novo.");
@@ -691,7 +937,8 @@ const FORMS = {
   treinos: { titulo: "Treino", campos: [{ k: "nome", l: "Nome", ph: "Treino A · Inferiores" }, { k: "dias", l: "Dias da semana", t: "dias" }, { k: "exercicios", l: "Exercícios", t: "textarea", ph: "Agachamento 4x12 30kg\nLeg press 4x10 80kg", hint: "Um por linha: nome, séries x reps, carga" }] },
   refeicoes: { titulo: "Refeição", campos: [{ k: "nome", l: "Nome", ph: "Almoço" }, { k: "hora", l: "Horário", t: "time" }, { k: "itens", l: "O que comer", t: "textarea", ph: "Um item por linha" }] },
   tarefas: { titulo: "Tarefa", campos: [{ k: "titulo", l: "O que fazer", ph: "Lavar a louça" }, { k: "tipo", l: "Tipo", t: "select", op: [["dia", "Do dia"], ["casa", "Casa"], ["trabalho", "Trabalho"]] }, { k: "data", l: "Para quando", t: "date", hint: "Deixe vazio se não tem data" }] },
-  habitos: { titulo: "Hábito", campos: [{ k: "nome", l: "Nome", ph: "Água" }, { two: [{ k: "meta", l: "Meta por dia", t: "number", ph: "2500" }, { k: "unidade", l: "Unidade", ph: "ml" }] }, { k: "passo", l: "Quanto soma cada toque", t: "number", ph: "250" }] },
+  habitos: { titulo: "Hábito", campos: [{ k: "nome", l: "Nome", ph: "Água" }, { k: "icone", l: "Ícone", t: "icone" }, { k: "cor", l: "Cor", t: "cor" }, { two: [{ k: "meta", l: "Meta por dia", t: "number", ph: "2500" }, { k: "unidade", l: "Unidade", ph: "ml" }] }, { two: [{ k: "passo", l: "Cada toque soma", t: "number", ph: "250" }, { k: "vezesSemana", l: "Vezes por semana", t: "number", ph: "7" }] }] },
+  areaAno: { titulo: "Área", campos: [{ k: "nome", l: "Nome da área", ph: "Saúde & corpo" }, { k: "icone", l: "Ícone", t: "icone" }] },
   agenda: { titulo: "Evento", campos: [{ k: "titulo", l: "Evento", ph: "Reunião" }, { two: [{ k: "data", l: "Data", t: "date" }, { k: "hora", l: "Hora", t: "time" }] }, { k: "local", l: "Onde", ph: "Opcional" }] },
   contas: { titulo: "Conta", campos: [{ k: "nome", l: "Nome", ph: "Cartão de crédito" }, { two: [{ k: "valor", l: "Valor (R$)", t: "number", ph: "0,00" }, { k: "vencimento", l: "Vencimento", t: "date" }] }, { k: "parcela", l: "Parcela", ph: "Ex: 3/10 (opcional)" }] },
   gastos: { titulo: "Gasto", campos: [{ k: "desc", l: "Com o quê", ph: "Mercado" }, { two: [{ k: "valor", l: "Valor (R$)", t: "number", ph: "0,00" }, { k: "data", l: "Data", t: "date" }] }, { k: "categoria", l: "Categoria", t: "cat" }] },
@@ -705,21 +952,25 @@ function textToEx(t) {
   });
 }
 let form = null;
+const lista = a => a === "areaAno" ? planoDe(ui.ano).areas : S[a];
+const chave = a => a === "areaAno" ? "ano-" + ui.ano : a;
 function abrirForm(area, id) {
-  const cfg = FORMS[area], it = id ? S[area].find(x => x.id === id) : null;
-  const val = it ? { ...it } : ({ tarefas: { tipo: rota() === "rotina" && ui.filtro !== "todas" ? ui.filtro : "dia", data: hoje() }, agenda: { data: hoje() }, gastos: { data: hoje() }, contas: { vencimento: hoje() }, habitos: { passo: 1, unidade: "vez", meta: 1 }, treinos: { dias: [] } }[area] || {});
+  const cfg = FORMS[area], it = id ? lista(area).find(x => x.id === id) : null;
+  const val = it ? { ...it } : ({ tarefas: { tipo: rota() === "rotina" && ui.filtro !== "todas" ? ui.filtro : "dia", data: hoje() }, agenda: { data: hoje() }, gastos: { data: hoje() }, contas: { vencimento: hoje() }, habitos: { passo: 1, unidade: "vez", meta: 1, vezesSemana: 7, cor: S.habitos.length % CORES, icone: "⭐" }, areaAno: { icone: "⭐" }, treinos: { dias: [] } }[area] || {});
   if (area === "treinos") val.exercicios = exToText(arr(val.exercicios));
-  form = { area, id, dias: new Set(arr(val.dias)) };
+  form = { area, id, dias: new Set(arr(val.dias)), icone: val.icone || "⭐", cor: Number(val.cor) || 0 };
   const cats = [...new Set([...S.orcamento.map(o => o.categoria), ...S.gastos.map(g => g.categoria), "Mercado", "Lazer", "Transporte", "Casa", "Saúde", "Outros"])];
   const campo = c => {
     const v = val[c.k] ?? "", idc = "f-" + c.k;
     let input;
     if (c.t === "textarea") input = `<textarea id="${idc}" placeholder="${esc(c.ph || "")}">${esc(v)}</textarea>`;
     else if (c.t === "select") input = `<select id="${idc}">${c.op.map(([k, n]) => `<option value="${k}" ${v === k ? "selected" : ""}>${n}</option>`).join("")}</select>`;
+    else if (c.t === "icone") input = `<div class="emoji-pick" id="${idc}">${[...new Set([form.icone, ...EMOJIS])].map(e => `<button type="button" data-act="icone-pick" aria-pressed="${e === form.icone}" aria-label="${e}">${e}</button>`).join("")}</div>`;
+    else if (c.t === "cor") input = `<div class="cor-pick" id="${idc}">${Array.from({ length: CORES }, (_, i) => `<button type="button" data-act="cor-pick" data-i="${i}" style="background:${cor(i)}" aria-pressed="${i === form.cor}" aria-label="Cor ${i + 1}"></button>`).join("")}</div>`;
     else if (c.t === "dias") input = `<div class="daypick" id="${idc}">${DIAS.map((n, i) => `<button type="button" data-act="dia-pick" data-i="${i}" aria-pressed="${form.dias.has(i)}">${n}</button>`).join("")}</div>`;
     else if (c.t === "cat") input = `<input id="${idc}" list="cats" value="${esc(v)}" placeholder="Mercado"><datalist id="cats">${cats.map(x => `<option value="${esc(x)}">`).join("")}</datalist>`;
     else input = `<input id="${idc}" type="${c.t === "number" ? "text" : c.t || "text"}" ${c.t === "number" ? 'inputmode="decimal"' : ""} value="${esc(c.t === "number" && v !== "" ? String(v).replace(".", ",") : v)}" placeholder="${esc(c.ph || "")}">`;
-    return `<div class="field"><label for="${idc}">${c.l}</label>${input}${c.hint ? `<span class="hint">${c.hint}</span>` : ""}</div>`;
+    return `<div class="field"><label ${["icone", "cor", "dias"].includes(c.t) ? "" : `for="${idc}"`}>${c.l}</label>${input}${c.hint ? `<span class="hint">${c.hint}</span>` : ""}</div>`;
   };
   $("#sheet").innerHTML = `<div class="sheet-wrap" data-act="fechar-fundo"><form class="sheet" id="form" role="dialog" aria-label="${cfg.titulo}">
     <div class="row"><h2 class="grow">${it ? "Editar" : "Nova"} ${cfg.titulo.toLowerCase()}</h2><button type="button" class="icon-btn" data-act="fechar" aria-label="Fechar">✕</button></div>
@@ -732,15 +983,17 @@ function abrirForm(area, id) {
 }
 function salvarForm() {
   const { area, id } = form, o = {};
-  const walk = l => l.forEach(c => c.two ? walk(c.two) : c.t !== "dias" && (o[c.k] = $("#f-" + c.k).value));
+  const walk = l => l.forEach(c => c.two ? walk(c.two) : c.t === "icone" ? (o.icone = form.icone) : c.t === "cor" ? (o.cor = form.cor) : c.t !== "dias" && (o[c.k] = $("#f-" + c.k).value));
   walk(FORMS[area].campos);
   if (area === "treinos") { o.dias = [...form.dias].sort(); o.exercicios = textToEx(o.exercicios); }
-  const old = id && S[area].find(x => x.id === id);
+  const L = lista(area), old = id && L.find(x => x.id === id);
   if (old && area === "tarefas") o.feito = old.feito;
   if (old && area === "contas") o.pago = old.pago;
+  if (old && area === "habitos") o.recorde = old.recorde;
+  if (old && area === "areaAno") o.metas = old.metas;
   const novo = norm(area, o, id);
-  if (old) S[area][S[area].indexOf(old)] = novo; else S[area].push(novo);
-  fechar(); persist(area); render(); toast(old ? "Salvo" : `${FORMS[area].titulo} adicionado`);
+  if (old) L[L.indexOf(old)] = novo; else L.push(novo);
+  fechar(); persist(chave(area)); render(); toast(old ? "Salvo" : `${FORMS[area].titulo} adicionado`);
 }
 function fechar() { $("#sheet").hidden = true; $("#sheet").innerHTML = ""; form = null; }
 
@@ -761,13 +1014,35 @@ document.addEventListener("click", e => {
     case "add": abrirForm(area); break;
     case "edit": abrirForm(area, id); break;
     case "del": {
-      const i = S[area].findIndex(x => x.id === id); if (i < 0) break;
-      const [it] = S[area].splice(i, 1); persist(area); render();
-      toast("Apagado", () => { S[area].splice(i, 0, it); persist(area); render(); }); break;
+      const L = lista(area), k = chave(area), i = L.findIndex(x => x.id === id); if (i < 0) break;
+      const [it] = L.splice(i, 1); persist(k); render();
+      toast("Apagado", () => { L.splice(i, 0, it); persist(k); render(); }); break;
     }
     case "tarefa": { const t = S.tarefas.find(x => x.id === id); if (t) { t.feito = !t.feito; persist("tarefas"); render(); } break; }
     case "conta": { const c = S.contas.find(x => x.id === id); if (c) { c.pago = !c.pago; persist("contas"); render(); } break; }
-    case "hab": { const hb = S.habitos.find(x => x.id === id); if (hb) { const d = dia(); d.h[id] = Math.max(0, (d.h[id] || 0) + Number(b.dataset.d) * hb.passo); persist("log"); render(); } break; }
+    case "hab": { const hb = S.habitos.find(x => x.id === id); if (hb) { const d = dia(); d.h[id] = Math.max(0, (d.h[id] || 0) + Number(b.dataset.d) * hb.passo); persist("log"); conferirRecorde(hb); render(); } break; }
+    case "hab-cal": ui.habAberto[id] = !ui.habAberto[id]; render(); break;
+    case "mes": { const [y, m] = ui.calMes.split("-").map(Number), d = new Date(y, m - 1 + Number(b.dataset.d), 1); const ym = d.getFullYear() + "-" + pad(d.getMonth() + 1); if (ym <= mesAtual()) { ui.calMes = ym; render(); } break; }
+    case "ano": ui.ano += Number(b.dataset.d); render(); break;
+    case "icone-pick": form.icone = b.textContent; b.parentElement.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); break;
+    case "cor-pick": form.cor = +b.dataset.i; b.parentElement.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); break;
+    case "mic": tocarMic(b.dataset.alvo); break;
+    case "meta-feito": case "meta-foco": case "meta-del": {
+      const p = planoDe(ui.ano), ar = p.areas.find(x => x.id === b.dataset.a); if (!ar) break;
+      const ms = arr(ar.metas), i = ms.findIndex(x => x.id === id); if (i < 0) break; const m = ms[i];
+      if (a === "meta-feito") { m.feito = !m.feito; if (m.feito) toast(m.foco ? "Foco conquistado! 🏆" : "Conquistado! ✨"); }
+      else if (a === "meta-foco") { if (!m.foco && todasMetas(p).filter(x => x.foco).length >= 3) { toast("Já tem 3 focos. Tira a ⭐ de um antes."); break; } m.foco = !m.foco; }
+      else { ms.splice(i, 1); toast("Meta apagada", () => { ms.splice(i, 0, m); salvarAno(); render(); }); }
+      ar.metas = ms; salvarAno(); render(); break;
+    }
+    case "mood-del": {
+      const p = planoDe(ui.ano), i = p.mood.findIndex(x => x.id === id); if (i < 0) break;
+      const [im] = p.mood.splice(i, 1); salvarAno(); render();
+      let voltou = false;
+      toast("Foto removida", () => { voltou = true; p.mood.splice(i, 0, im); salvarAno(); render(); });
+      setTimeout(() => { if (!voltou && assets) assets.delete(im.id).catch(() => {}); }, 6000); break;
+    }
+    case "planejar": rascunho = `Me ajuda a planejar meu ${ui.ano}. Me faz perguntas sobre cada área da vida e depois coloca as metas no plano, com 3 focos.`; location.hash = "agente"; break;
     case "treino-feito": { const d = dia(), i = d.t.indexOf(id); i < 0 ? d.t.push(id) : d.t.splice(i, 1); persist("log"); render(); break; }
     case "refeicao-feita": { const d = dia(), i = d.m.indexOf(id); i < 0 ? d.m.push(id) : d.m.splice(i, 1); persist("log"); render(); break; }
     case "seg": ui[b.dataset.k] = b.dataset.v; if (rota() !== b.dataset.k) { location.hash = b.dataset.k; e.preventDefault(); } else render(); break;
@@ -781,11 +1056,32 @@ document.addEventListener("click", e => {
     case "fechar": case "fechar-fundo": fechar(); break;
     case "desfazer": if (desfazer) { desfazer(); desfazer = null; $("#toast").hidden = true; } break;
     case "sugestao": enviar(b.textContent); break;
-    case "mic": tocarMic(); break;
-    case "voz-toggle": lerResp = !lerResp; b.setAttribute("aria-pressed", lerResp); try { localStorage.setItem("central:voz", lerResp ? "1" : "0"); } catch (e) {} if (!lerResp && tts) tts.stop(); break;
   }
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && form) fechar(); });
+document.addEventListener("submit", e => {
+  const f = e.target; if (f.dataset.form !== "meta") return;
+  e.preventDefault();
+  const inp = f.querySelector("input"), t = str(inp.value); if (!t) return;
+  const ar = planoDe(ui.ano).areas.find(x => x.id === f.dataset.a); if (!ar) return;
+  ar.metas = arr(ar.metas); ar.metas.push({ id: uid(), texto: t, feito: false, foco: false });
+  inp.value = ""; salvarAno(); render();
+});
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (el.id === "mood-file") { subirFotos([...el.files]); el.value = ""; return; }
+  const k = el.dataset && el.dataset.chg; if (!k) return;
+  const p = planoDe(ui.ano), v = str(el.value);
+  if (p[k] !== v) { p[k] = v; salvarAno(); if (k === "pinterest") render(); }
+});
+function conferirRecorde(hb) {
+  const sd = seqDias(hb);
+  if (sd > (hb.recorde || 0)) {
+    hb.recorde = sd; persist("habitos");
+    const md = MEDALHAS.find(([n]) => n === sd);
+    if (md) toast(`${md[1]} ${md[2]} de ${hb.nome}! Medalha nova.`);
+  }
+}
 init();
 </script>
 
