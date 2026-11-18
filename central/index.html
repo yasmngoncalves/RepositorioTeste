@@ -143,6 +143,13 @@ button{cursor:pointer}
 .msg.tool{align-self:flex-start;background:transparent;color:var(--muted);font-size:13px;padding:2px 4px}
 .composer{display:flex;gap:8px;align-items:flex-end}
 .composer textarea{flex:1;min-width:0;resize:none;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:10px 14px;min-height:44px;max-height:140px}
+.mic{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--surface-2);color:var(--ink);display:grid;place-items:center;padding:0;position:relative}
+.mic svg{width:22px;height:22px}
+.mic[data-on="true"]{background:var(--bad);color:#fff}
+.mic[data-on="true"]::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--bad);animation:pulso 1.2s ease-out infinite}
+@keyframes pulso{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.35)}}
+.voz-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.voz-hint{font-size:12px;color:var(--muted)}
 .agent-intro{background:var(--ink);color:var(--bg);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:6px}
 .agent-intro h2{font-size:22px}
 .agent-intro p{margin:0;opacity:.8;font-size:14px}
@@ -220,6 +227,9 @@ const VIEWS = [["hoje", "Hoje"], ["corpo", "Corpo"], ["rotina", "Rotina"], ["age
 const AREAS = ["treinos", "refeicoes", "tarefas", "habitos", "agenda", "contas", "gastos", "orcamento"];
 const S = {}; AREAS.forEach(a => S[a] = []); S.log = { days: {} };
 let mode = "loading", db = null, sample = null, carregou = false;
+let dict = null, tts = null, falando = false;
+const voz = { estado: "idle", parcial: "", enviar: false };
+let lerResp = false; try { lerResp = localStorage.getItem("central:voz") === "1"; } catch (e) {}
 const ui = { corpo: "treinos", rotina: "tarefas", filtro: "todas", passados: false };
 
 /* Formato de cada área (usado pelos formulários e pelo agente) */
@@ -342,6 +352,48 @@ async function init() {
     carregou = true; render();
   }, e => { clearTimeout(timer); aviso = "Não consegui abrir seus dados. Recarregue a página."; carregou = true; render(); });
   c.use("sample").then(s => { sample = s; if (rota() === "agente") render(); });
+  c.use("dictation").then(d => { if (!d) return; dict = d; ligarDitado(d); if (rota() === "agente") render(); });
+  c.use("tts").then(t => { if (!t) return; tts = t; t.onState(({ state }) => { falando = state === "speaking"; atualizarVoz(); }); if (rota() === "agente") render(); });
+}
+
+/* ===== voz ===== */
+const juntar = (a, b) => [str(a), str(b)].filter(Boolean).join(" ");
+function ligarDitado(d) {
+  d.onPartial(({ text }) => { voz.parcial = text; const ta = $("#ask"); if (ta) ta.value = juntar(rascunho, text); });
+  d.onFinal(({ text }) => { rascunho = juntar(rascunho, text); voz.parcial = ""; const ta = $("#ask"); if (ta) ta.value = rascunho; });
+  d.onState(({ state, reason }) => {
+    voz.estado = state;
+    if (state === "idle") {
+      voz.parcial = "";
+      if (reason === "not_granted" || reason === "unavailable") { dict = null; toast(reason === "not_granted" ? "Microfone bloqueado. Libere nas permissões da página." : "Voz não disponível aqui. Use o microfone do teclado."); render(); }
+      else if (reason === "upstream_error" || reason === "rate_limited") toast("Não consegui ouvir agora. Tenta de novo.");
+      const mandar = voz.enviar && reason === "stopped" && str(rascunho);
+      voz.enviar = false;
+      if (mandar) enviar(rascunho);
+    }
+    atualizarVoz();
+  });
+}
+function atualizarVoz() {
+  const m = $("#mic"); if (!m) return;
+  const on = voz.estado === "listening" || voz.estado === "starting";
+  m.dataset.on = on; m.setAttribute("aria-label", on ? "Parar e enviar" : "Falar com o agente");
+  const h = $("#voz-status"); if (h) h.textContent = on ? "Ouvindo… toque de novo pra enviar" : voz.estado === "finishing" ? "Finalizando…" : falando ? "Falando…" : "";
+}
+function tocarMic() {
+  if (!dict) return;
+  if (voz.estado === "listening" || voz.estado === "starting") { voz.enviar = true; dict.stop().catch(() => {}); return; }
+  if (chat.busy) return;
+  dict.start().catch(e => {
+    if (e && e.code === "not_granted") { dict = null; render(); toast("Sem acesso ao microfone. Libere nas permissões da página."); }
+    else if (e && e.code === "unavailable") { dict = null; render(); toast("Voz não disponível aqui. Use o microfone do teclado."); }
+    else if (e && e.code !== "stopped" && e.code !== "dismissed") toast("Não consegui ouvir agora.");
+  });
+  if (tts && falando) tts.stop();
+}
+function falar(texto) {
+  if (!tts || !lerResp || !str(texto)) return;
+  tts.speak(texto.replace(/^\s*-\s*/gm, "").slice(0, 2000), { language: "pt-BR" }).catch(() => {});
 }
 let aviso = "";
 
@@ -537,13 +589,15 @@ function vAgente() {
   return `<div class="agent-intro"><h2>Oi, Yasmin. Bora organizar?</h2><p>Eu vejo tudo da sua central e posso criar treinos, refeições, tarefas, eventos, contas, gastos e hábitos pra você.</p></div>
   <div class="chat" id="chat"></div>
   ${chat.vis.length ? "" : `<div class="chips">${SUGESTOES.map(s => `<button class="chip" data-act="sugestao">${esc(s)}</button>`).join("")}</div>`}
-  <form class="composer" id="composer"><textarea id="ask" rows="1" placeholder="Pede qualquer coisa…" aria-label="Mensagem para o agente"></textarea><button class="btn" id="send" type="submit">${chat.busy ? "Parar" : "Enviar"}</button></form>`;
+  <div class="voz-row">${tts ? `<button class="chip" id="voz-toggle" data-act="voz-toggle" aria-pressed="${lerResp}">🔊 Ler respostas em voz alta</button>` : ""}<span class="voz-hint" id="voz-status">${dict || tts ? "" : "Pra falar, use o microfone do teclado do celular."}</span></div>
+  <form class="composer" id="composer">${dict ? `<button type="button" class="mic" id="mic" data-act="mic" data-on="false" aria-label="Falar com o agente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>` : ""}<textarea id="ask" rows="1" placeholder="${dict ? "Fala ou digita…" : "Pede qualquer coisa…"}" aria-label="Mensagem para o agente"></textarea><button class="btn" id="send" type="submit">${chat.busy ? "Parar" : "Enviar"}</button></form>`;
 }
 function montarChat(foco) {
   const box = $("#chat"); if (!box) return;
   box.innerHTML = chat.vis.map(m => `<div class="msg ${m.who}">${esc(m.text)}</div>`).join("");
   const ta = $("#ask");
-  if (ta) { ta.value = rascunho; if (foco === "ask") ta.focus(); ta.addEventListener("input", () => { rascunho = ta.value; }); ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#composer").requestSubmit(); } }); }
+  atualizarVoz();
+  if (ta) { ta.value = juntar(rascunho, voz.parcial); if (foco === "ask") ta.focus(); ta.addEventListener("input", () => { rascunho = ta.value; }); ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#composer").requestSubmit(); } }); }
   $("#composer").addEventListener("submit", e => { e.preventDefault(); if (chat.busy) { chat.ctl && chat.ctl.abort(); return; } enviar(rascunho); });
 }
 let rascunho = "";
@@ -621,6 +675,7 @@ async function enviar(texto) {
       onText: ({ text }) => { bolha.text = text; const els = document.querySelectorAll("#chat .msg.bot"); const el = els[els.length - 1]; if (el) el.textContent = text; }
     });
     bolha.text = text; chat.turns.push({ role: "assistant", content: text });
+    falar(text);
   } catch (e) {
     const msg = { cancelled: "", not_granted: "Sem permissão pra usar o Claude aqui. Libere nas permissões da página.", rate_limited: "Muitos pedidos seguidos. Espera um pouquinho e tenta de novo.", tools_unavailable: "Este app do Claude não deixa o agente salvar itens ainda. Tente pelo navegador.", refused: "Não consigo ajudar com isso. Tenta pedir de outro jeito.", session_expired: "Sua sessão expirou. Entre de novo no Claude." }[e && e.code];
     bolha.text = (e && e.code !== "refused" && e.text ? e.text + "\n\n" : "") + (msg ?? "Deu ruim na conexão. Tenta de novo.");
@@ -726,6 +781,8 @@ document.addEventListener("click", e => {
     case "fechar": case "fechar-fundo": fechar(); break;
     case "desfazer": if (desfazer) { desfazer(); desfazer = null; $("#toast").hidden = true; } break;
     case "sugestao": enviar(b.textContent); break;
+    case "mic": tocarMic(); break;
+    case "voz-toggle": lerResp = !lerResp; b.setAttribute("aria-pressed", lerResp); try { localStorage.setItem("central:voz", lerResp ? "1" : "0"); } catch (e) {} if (!lerResp && tts) tts.stop(); break;
   }
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && form) fechar(); });
